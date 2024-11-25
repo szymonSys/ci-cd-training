@@ -9,6 +9,8 @@ import { ConfigProvider } from './context/ConfigContext';
 const Characters = lazy(() => import('./pages/Characters'));
 const CharacterDetails = lazy(() => import('./pages/CharacterDetails'));
 
+console.log(import.meta.env);
+
 const router = createHashRouter([
   {
     path: '/',

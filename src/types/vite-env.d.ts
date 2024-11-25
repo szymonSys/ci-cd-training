@@ -2,6 +2,7 @@
 
 interface ImportMetaEnv {
   readonly APP_VERSION: string;
+  readonly VITE_NAME: string;
 }
 
 interface ImportMeta {
