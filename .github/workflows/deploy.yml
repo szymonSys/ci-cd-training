@@ -21,45 +21,15 @@ jobs:
     uses: ./.github/workflows/lint-and-tests.yml
   deploy-netlify:
     needs: lint-and-tests
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    uses: ./.github/workflows/deploy-netlify.yml
+    secrets:
+      NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+      NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
+    if: ${{ inputs.deploy-netlify  }}
 
-      - name: Configure node
-        uses: ./.github/actions/setup-project
-
-      - name: Build app
-        run: npm run build
-
-      - name: Deploy to Netlify production env
-        uses: ./.github/actions/deploy-netlify
-        if: ${{ inputs.deploy-netlify  }}
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
-        timeout-minutes: 2
   deploy-vercel:
     needs: lint-and-tests
-    runs-on: ubuntu-latest
-    env:
-      VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-      VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Configure node
-        uses: ./.github/actions/setup-project
-
-      - name: Deploy to Vercel production env
-        uses: ./.github/actions/deploy-vercel
-        if: ${{ inputs.deploy-vercel }}
-        with:
-          mode: ${{ inputs.vercel-env }}
-          vercel-token: ${{ secrets.VERCEL_TOKEN }}
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+    uses: ./.github/workflows/deploy-vercel.yml
+    secrets: inherit
+    with:
+      mode: ${{ inputs.vercel-env }}
