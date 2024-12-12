@@ -27,10 +27,10 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure node
-        uses: ./github/actions/setup-project
+        uses: ./.github/actions/setup-project
 
       - name: Deploy to Netlify production env
-        uses: ./github/actions/deploy-netlify
+        uses: ./.github/actions/deploy-netlify
         if: ${{ inputs.deploy-netlify  }}
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -52,7 +52,7 @@ jobs:
         uses: ./github/actions/setup-project
 
       - name: Deploy to Vercel production env
-        uses: ./github/actions/deploy-vercel
+        uses: ./.github/actions/deploy-vercel
         if: ${{ inputs.deploy-vercel }}
         with:
           mode: ${{ inputs.vercel-env }}
