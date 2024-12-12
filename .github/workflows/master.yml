@@ -16,33 +16,46 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Configure node
-        uses: actions/setup-node@v4
-        with:
-          node-version-file: '.nvmrc'
-
-      - name: Install dependencies
-        run: npm ci
+        uses: ./.github/actions/setup-project
 
       - name: Build app
         run: npm run build
 
-      - name: Deploy to Netlify
-        uses: nwtgck/actions-netlify@v3.0
+      - name: Deploy to Netlify production env
+        uses: ./.github/actions/deploy-netlify
         with:
-          publish-dir: './dist'
-          production-branch: master
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          deploy-message: 'Deploy from GitHub Actions'
         env:
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
           NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
         timeout-minutes: 2
+  deploy-vercel:
+    needs: lint-and-tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      # - name: Deploy to S3
-      #   uses: ./.github/actions/aws-s3-sync
-      #   with:
-      #     bucket-name: '[BUCKET_NAME]'
-      #     bundle-dir: '[BUNDLE_DIRECTORY]'
-      #   env:
-      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      - name: Configure node
+        uses: ./.github/actions/setup-project
+
+      - name: Build app
+        run: npm run build
+
+      - name: Deploy to Vercel production env
+        uses: ./.github/actions/deploy-vercel
+        with:
+          mode: 'production'
+          vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        env:
+          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+          VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
+
+    # - name: Deploy to S3
+    #   uses: ./.github/actions/aws-s3-sync
+    #   with:
+    #     bucket-name: '[BUCKET_NAME]'
+    #     bundle-dir: '[BUNDLE_DIRECTORY]'
+    #   env:
+    #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+    #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

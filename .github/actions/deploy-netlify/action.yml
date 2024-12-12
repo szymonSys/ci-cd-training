@@ -1,0 +1,29 @@
+name: Deploy to Netlify
+description: Deploy app to Netlify
+
+inputs:
+  netlify-token:
+    description: 'Netlify token'
+    required: true
+  publish-dir:
+    description: 'Directory to publish'
+    required: true
+    default: './dist'
+  production-branch:
+    description: 'Production branch'
+    required: true
+    default: 'master'
+  github-token:
+    description: 'GitHub token'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Deploy to Netlify
+      uses: nwtgck/actions-netlify@v3.0
+      with:
+        publish-dir: ${{ inputs.publish-dir }}
+        production-branch: ${{ inputs.production-branch }}
+        github-token: ${{ inputs.github-token }}
+        deploy-message: 'Deploy from GitHub Actions'
