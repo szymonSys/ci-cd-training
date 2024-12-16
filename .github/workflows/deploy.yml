@@ -11,10 +11,10 @@ on:
         type: boolean
         description: Enable Vercel deployment
         default: true
-      vercel-env:
-        type: string
-        description: Vercel environment
-        default: 'production'
+      # vercel-env:
+      #   type: string
+      #   description: Vercel environment
+      #   default: 'production'
 
 jobs:
   lint-and-tests:
@@ -31,5 +31,4 @@ jobs:
     needs: lint-and-tests
     uses: ./.github/workflows/deploy-vercel.yml
     secrets: inherit
-    with:
-      mode: ${{ inputs.vercel-env }}
+    if: ${{ inputs.deploy-vercel  }}

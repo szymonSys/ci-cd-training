@@ -2,15 +2,17 @@ name: Deploy app on Vercel
 
 on:
   workflow_call:
-    inputs:
-      mode:
-        type: string
-        description: Deployment mode
-        default: 'production'
+    # inputs:
+    #   mode:
+    #     type: string
+    #     description: Deployment mode
+    #     default: 'production'
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    environment:
+      name: Staging
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -22,7 +24,7 @@ jobs:
         uses: ./.github/actions/deploy-vercel
         with:
           vercel-token: ${{ secrets.VERCEL_TOKEN }}
-          mode: ${{ inputs.mode }}
+          mode: production
         env:
           VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
           VERCEL_PROJECT_ID: ${{ vars.VERCEL_PROJECT_ID }}
