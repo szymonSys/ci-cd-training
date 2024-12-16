@@ -2,6 +2,7 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 const App = () => {
+  console.log(import.meta.env);
   return (
     <div>
       <div className="bg-white rounded-lg shadow-sm p-4 mb-4">
