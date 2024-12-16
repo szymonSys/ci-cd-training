@@ -25,10 +25,10 @@ jobs:
     secrets:
       NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
       NETLIFY_SITE_ID: ${{ vars.NETLIFY_SITE_ID }}
-    if: ${{ inputs.deploy-netlify  }}
+    if: ${{ inputs.deploy-netlify || github.event_name == 'push' }}
 
   deploy-vercel:
     needs: lint-and-tests
     uses: ./.github/workflows/deploy-vercel.yml
     secrets: inherit
-    if: ${{ inputs.deploy-vercel  }}
+    if: ${{ inputs.deploy-vercel  || github.event_name == 'push' }}
