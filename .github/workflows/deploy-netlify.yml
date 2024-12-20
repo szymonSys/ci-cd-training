@@ -22,6 +22,8 @@ jobs:
 
       - name: Build app
         run: npm run build
+        env:
+          VITE_ENVIRONMENT: ${{ github.ref_name == 'master' && 'DEV' }}
 
       - name: Deploy to Netlify
         uses: ./.github/actions/deploy-netlify
@@ -30,4 +32,3 @@ jobs:
         env:
           NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
           NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          VITE_ENVIRONMENT: 'Development'
